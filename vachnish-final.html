@@ -601,11 +601,12 @@ footer {
 ═══════════════════════════════════════ */
 @media (max-width:768px) {
   /* Nav */
-  #nav { padding:0 16px; height:56px; }
+  #nav { padding:0 16px; height:56px; width:100%; box-sizing:border-box; }
   .nav-links, .nav-cta { display:none; }
   .hamburger { display:flex; }
   .logo-img { height:38px; }
   .mobile-menu { top:56px; padding:20px 20px; }
+  html, body { overflow-x:hidden; max-width:100vw; }
 
   /* Hero — stacked */
   #hero {
@@ -626,12 +627,11 @@ footer {
     object-position:center 10%;
   }
   .hero-photo::before {
-    background:linear-gradient(
-      to bottom,
-      rgba(9,9,9,0)    0%,
-      rgba(9,9,9,0.3)  60%,
-      rgba(9,9,9,1)   100%
-    );
+    background: none;
+  }
+  .hero-photo::after {
+    height:45%;
+    background:linear-gradient(to top, var(--dark) 0%, rgba(9,9,9,0.7) 60%, transparent 100%);
   }
   .hero-text {
     padding:28px 20px 56px;
