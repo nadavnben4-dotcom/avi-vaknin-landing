@@ -828,11 +828,8 @@ footer {
       <div class="contact-form-box reveal reveal-d1" id="contact">
         <h3>ייעוץ ראשוני</h3>
         <p>השאירו פרטים ונחזור אליכם לשיחת ייעוץ ללא עלות.</p>
-        <form class="form-stack" id="contact-form">
-          <input type="hidden" name="_subject" value="פנייה חדשה מאתר המשרד">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_next" value="about:blank">
+        <form class="form-stack" id="contact-form" name="contact" netlify data-netlify="true" action="/?sent=1">
+          <input type="hidden" name="form-name" value="contact">
           <div class="form-row">
             <input  type="text"  name="name"    class="f-input" placeholder="שם מלא" required>
             <input  type="tel"   name="phone"   class="f-input" placeholder="טלפון" required>
@@ -936,39 +933,17 @@ const counterObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.5 });
 document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
-// Contact form submission
-document.getElementById('contact-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('f-btn');
+// Show success message if redirected back after form submission
+if (new URLSearchParams(location.search).get('sent') === '1') {
   const msg = document.getElementById('form-msg');
-  btn.disabled = true;
-  btn.textContent = 'שולח...';
-  try {
-    const res = await fetch('https://formsubmit.co/ajax/A.vachnish.lawoffice@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(new FormData(this)))
-    });
-    const data = await res.json();
-    if (data.success === 'true' || data.success === true) {
-      msg.style.background = 'rgba(201,168,76,0.15)';
-      msg.style.color = '#C9A84C';
-      msg.style.border = '1px solid rgba(201,168,76,0.3)';
-      msg.textContent = 'הפנייה נשלחה בהצלחה! נחזור אליכם בהקדם.';
-      this.reset();
-    } else {
-      throw new Error();
-    }
-  } catch {
-    msg.style.background = 'rgba(255,80,80,0.1)';
-    msg.style.color = '#ff6b6b';
-    msg.style.border = '1px solid rgba(255,80,80,0.3)';
-    msg.textContent = 'שגיאה בשליחה. נסה שוב או צור קשר ישירות.';
-    btn.disabled = false;
-    btn.textContent = 'שלח פנייה ←';
-  }
+  msg.style.background = 'rgba(201,168,76,0.15)';
+  msg.style.color = '#C9A84C';
+  msg.style.border = '1px solid rgba(201,168,76,0.3)';
+  msg.textContent = 'הפנייה נשלחה בהצלחה! נחזור אליכם בהקדם.';
   msg.style.display = 'block';
-});
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  history.replaceState({}, '', location.pathname + '#contact');
+}
 
 // Mobile menu
 function toggleMenu() {
